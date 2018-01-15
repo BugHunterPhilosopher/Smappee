@@ -1,0 +1,14 @@
+{
+	"id" : "Smappee",
+	"name" : "Smappee",
+	"description" : "Plugin pour la gestion d'un moniteur d'électricité Smappee",
+	"licence" : "AGPL",
+	"author" : "Zala",
+	"require" : "3.0",
+	"category" : "energy",
+	"hasDependency" : false,
+	"hasOwnDeamon" : false,
+	"maxDependancyInstallTime" : 0,
+	"changelog" : "https://github.com/jeedom/Smappee/blob/master/doc/#language#/changelog.asciidoc",
+	"documentation" : "https://github.com/jeedom/Smappee/blob/master/doc/#language#/index.asciidoc"
+}
