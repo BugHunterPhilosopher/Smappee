@@ -38,7 +38,7 @@ foreach ($eqLogics as $eqLogic) {
     <span style="font-size : 1.1em;position:relative; top : 15px;word-break: break-all;white-space: pre-wrap;word-wrap: break-word;color:#767676">{{Configuration}}</span>
   </div>
   </div>
-  <legend><i class="fa fa-table"></i> {{Mes Smappees}}</legend>
+  <legend><i class="fa fa-table"></i> {{Mes Appareils}}</legend>
 <div class="eqLogicThumbnailContainer">
     <?php
         $command = escapeshellcmd('../../resources/demond/jeedom/Smappee.py');
@@ -50,11 +50,11 @@ foreach ($eqLogics as $eqLogic) {
         $opacity = '' ;
 
         foreach ($json_data as $appliance) {
-            $appliance_name = $appliance['name'];
+            $appliance_name = (empty($appliance['name'])) ? $appliance['id'] : $appliance['name'];
 
-            echo '<span class="eqLogicDisplayCard cursor" data-eqLogic_id="' . $appliance['id'] . ' smappeeAppliance">';
-            echo '<img src="' . $plugin->getPathImgIcon() . '" height="105" width="95" />';
-            echo '<span style="font-size : 1.1em;position:relative; top : 15px;word-break: break-all;white-space: pre-wrap;word-wrap: break-word;">' . $appliance_name . '</span>';
+            echo '<span class="eqLogicDisplayCard cursor smappeeAppliance" data-eqLogic_id="' . $appliance['id'] . '">';
+            echo '<img class="smappeeApplianceImage" src="' . $plugin->getPathImgIcon() . '" height="140" width="130" />';
+            echo '<span style="font-size : 1.1em;position:relative; top : 15px;">' . $appliance_name . '</span>';
             echo '</span>';
         }
     ?>

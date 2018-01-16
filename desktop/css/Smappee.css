@@ -1,9 +1,16 @@
-.smappeeAppliance {
+span.smappeeAppliance {
     text-align: center;
     background-color : #ffffff;
     height : 200px;
-    padding : 75px;
     border-radius: 2px;
+    top: 30px;
     width : 160px;
     margin : 10px;
+    padding-right : 80px;
+    padding-bottom: 100px;
+}
+
+.smappeeApplianceImage {
+    bottom: -35px;
+    position: relative;
 }
