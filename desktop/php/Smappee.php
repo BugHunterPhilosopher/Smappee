@@ -5,6 +5,8 @@ if (!isConnect('admin')) {
 $plugin = plugin::byId('Smappee');
 sendVarToJS('eqType', $plugin->getId());
 $eqLogics = eqLogic::byType($plugin->getId());
+
+require_once dirname(__FILE__) . '/../../../../core/php/core.inc.php';
 ?>
 <?php include_file('desktop', 'Smappee', 'css', 'Smappee'); ?>
 <div class="row row-overflow">
@@ -41,14 +43,18 @@ foreach ($eqLogics as $eqLogic) {
   <legend><i class="fa fa-table"></i> {{Mes Appareils}}</legend>
 <div class="eqLogicThumbnailContainer">
     <?php
-        $command = escapeshellcmd('../../resources/demond/jeedom/Smappee.py');
-        $output = shell_exec($command);
+        // Retrieve appliances data
+        print('client_secret: %s ' % config::byKey('client_secret'));
+        shell_exec('python ../../resources/demond/jeedom/Smappee.py ' . config::byKey('client_id')
+            . ' ' . config::byKey('client_secret') . ' ' . config::byKey('username')
+            . ' ' . config::byKey('password'));
 
         $tempdir = sys_get_temp_dir();
         $json = file_get_contents($tempdir . '/Smappee.json');
         $json_data = json_decode($json, true);
         $opacity = '' ;
 
+        // Display appliances
         foreach ($json_data as $appliance) {
             $appliance_name = (empty($appliance['name'])) ? $appliance['id'] : $appliance['name'];
 

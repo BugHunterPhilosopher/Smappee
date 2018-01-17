@@ -25,24 +25,27 @@ if (!isConnect()) {
 <form class="form-horizontal">
     <fieldset>
         <div class="form-group">
-            <label class="col-lg-4 control-label">{{Global param 1}}</label>
+            <label class="col-lg-4 control-label">{{Client ID}}</label>
             <div class="col-lg-2">
-                <input class="configKey form-control" data-l1key="param1" />
+                <input class="configKey form-control" data-l1key="client_id" />
             </div>
         </div>
         <div class="form-group">
-            <label class="col-lg-4 control-label">{{Global param 2}}</label>
+            <label class="col-lg-4 control-label">{{Client Secret}}</label>
             <div class="col-lg-2">
-                <input class="configKey form-control" data-l1key="param2" value="80" />
+                <input class="configKey form-control" data-l1key="client_secret" />
             </div>
         </div>
         <div class="form-group">
-            <label class="col-lg-4 control-label">{{Global param 2}}</label>
+            <label class="col-lg-4 control-label">{{Nom d'utilisateur}}</label>
             <div class="col-lg-2">
-                <select class="configKey form-control" data-l1key="param3">
-                    <option value="value1">value1</option>
-                    <option value="value2">value2</option>
-                </select>
+                <input class="configKey form-control" data-l1key="username" />
+            </div>
+        </div>
+        <div class="form-group">
+            <label class="col-lg-4 control-label">{{Mot de passe}}</label>
+            <div class="col-lg-2">
+                <input class="configKey form-control" data-l1key="password" />
             </div>
         </div>
   </fieldset>
