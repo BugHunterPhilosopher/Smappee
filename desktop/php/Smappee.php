@@ -44,11 +44,6 @@ foreach ($eqLogics as $eqLogic) {
 <div class="eqLogicThumbnailContainer">
     <?php
         // Retrieve appliances data
-        print('client_secret: %s ' % config::byKey('client_secret'));
-        shell_exec('python ../../resources/demond/jeedom/Smappee.py ' . config::byKey('client_id')
-            . ' ' . config::byKey('client_secret') . ' ' . config::byKey('username')
-            . ' ' . config::byKey('password'));
-
         $tempdir = sys_get_temp_dir();
         $json = file_get_contents($tempdir . '/Smappee.json');
         $json_data = json_decode($json, true);

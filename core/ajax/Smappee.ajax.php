@@ -26,7 +26,20 @@ try {
     
     ajax::init();
 
+    if (init('action') == 'postSave') {
+        $type = init('type');
 
+        if ($type == 'remote') {
+            $client_id = init('client_id');
+            $client_secret = init('client_secret');
+            $username = init('username');
+            $password = init('password');
+
+            $output = passthru("python ../../resources/demond/jeedom/Smappee.py " . $client_id . " " . $client_secret . " " . $username . " " . $password);
+            echo $output;
+        }
+        ajax::success();
+    }
 
     throw new Exception(__('Aucune méthode correspondante à : ', __FILE__) . init('action'));
     /*     * *********Catch exeption*************** */
