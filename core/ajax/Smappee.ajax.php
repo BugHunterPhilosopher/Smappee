@@ -35,8 +35,16 @@ try {
             $username = init('username');
             $password = init('password');
 
-            $output = passthru("python ../../resources/demond/jeedom/Smappee.py " . $client_id . " " . $client_secret . " " . $username . " " . $password);
-            echo $output;
+            config::save('client_id', $client_id, 'Smappee');
+            config::save('client_secret', $client_secret, 'Smappee');
+            config::save('username' , $username, 'Smappee');
+            config::save('password', $password, 'Smappee');
+
+            passthru("python ../../resources/demond/jeedom/Smappee.py "
+                . config::byKey('client_id', 'Smappee') . " "
+                . config::byKey('client_secret', 'Smappee') . " "
+                . config::byKey('username', 'Smappee') . " "
+                . config::byKey('password', 'Smappee'));
         }
         ajax::success();
     }
