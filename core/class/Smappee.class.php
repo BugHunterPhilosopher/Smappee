@@ -25,102 +25,70 @@ class Smappee extends eqLogic {
 
     public static function cron($_eqlogic_id = null)
     {
-        log::add('Smappee', 'debug', 'Cron pull for Smappee1');
+        log::add('Smappee', 'debug', 'Cron for Smappee');
 
         if ($_eqlogic_id !== null) {
-            log::add('Smappee', 'debug', 'Cron pull for Smappee2');
             $eqLogics = array(eqLogic::byId($_eqlogic_id));
-            log::add('Smappee', 'debug', 'Cron pull for Smappee3');
         } else {
-            log::add('Smappee', 'debug', 'Cron pull for Smappee4');
             $eqLogics = eqLogic::byType('Smappee');
-            log::add('Smappee', 'debug', 'Cron pull for Smappee5');
+
             if ($eqLogics == null) {
-                log::add('Smappee', 'debug', 'Cron pull for Smappee9');
                 self::createEquipment();
-                log::add('Smappee', 'debug', 'Cron pull for Smappee10');
                 $eqLogics = eqLogic::byType('Smappee');
-                log::add('Smappee', 'debug', 'Cron pull for Smappee11');
             }
         }
 
-        log::add('Smappee', 'debug', 'Cron pull for SmappeeA');
         foreach ($eqLogics as $MySmappee) {
-            log::add('Smappee', 'debug', 'Cron pull for SmappeeB');
+
             if ($MySmappee->getIsEnable() == 1) {
-                log::add('Smappee', 'debug', 'Cron pull for SmappeeC');
                 $global_electricity_consumption = rand(5, 15);
-                log::add('Smappee', 'debug', 'Cron pull for SmappeeD');
+
                 foreach ($MySmappee->getCmd('info') as $cmd) {
-                    log::add('Smappee', 'debug', 'Cron pull for SmappeeE');
                     switch ($cmd->getName()) {
                         case 'Consommation électrique globale':
-                            log::add('Smappee', 'debug', 'Cron pull for SmappeeF');
                             $value = $global_electricity_consumption;
-                            log::add('Smappee', 'debug', 'Cron pull for SmappeeG');
                             break;
                     }
 
-                    log::add('Smappee', 'debug', 'Cron pull for SmappeeH');
                     $cmd->event($value);
-                    log::add('Smappee', 'debug', 'Cron pull for SmappeeI');
                     log::add('Smappee','debug',"set '".$cmd->getName()."' to ". $value . "W");
-                    log::add('Smappee', 'debug', 'Cron pull for SmappeeJ');
                 }
 
-                log::add('Smappee', 'debug', 'Cron pull for SmappeeK');
                 $MySmappee->refreshWidget();
-                log::add('Smappee', 'debug', 'Cron pull for SmappeeL');
             }
         }
+
+        log::add('Smappee', 'debug', 'done Cron for Smappee');
     }
 
     private static function createEquipment()
     {
         self::$Smappee = new eqLogic();
-        log::add('Smappee', 'debug', 'Cron pull for Smappee10');
+
         self::$Smappee->setEqType_name('Smappee');
         self::$Smappee->setIsEnable(1);
         self::$Smappee->setIsVisible(1);
         self::$Smappee->setStatus('OK');
         self::$Smappee->setName('Consommation électrique globale');
-        log::add('Smappee', 'debug', 'Cron pull for Smappee11');
         self::$Smappee->setLogicalId(uniqid());
-        log::add('Smappee', 'debug', 'Cron pull for Smappee12');
         self::$Smappee->save();
-        log::add('Smappee', 'debug', 'Cron pull for Smappee13');
+
         Smappee::createCommand(self::$Smappee->getId());
-        log::add('Smappee', 'debug', 'Cron pull for Smappee14');
     }
 
     public static function createCommand($id) {
-        log::add('Smappee','debug','Execution du preUpdate()');
-
-        //Rajout des commandes
         $SmappeeCmd = new SmappeeCmd();
-        log::add('Smappee', 'debug', 'Cron pull for Smappee300');
+
         $SmappeeCmd->setName('Consommation électrique globale');
-        log::add('Smappee', 'debug', 'Cron pull for Smappee400');
         $SmappeeCmd->setLogicalId('Consommation électrique globale');
-        log::add('Smappee', 'debug', 'Cron pull for Smappee500');
         $SmappeeCmd->setEqLogic_id($id);
-        //$SmappeeCmd->preSave();
-        log::add('Smappee', 'debug', 'Cron pull for Smappee600');
         $SmappeeCmd->setUnite('W');
         $SmappeeCmd->setType('info');
-        log::add('Smappee', 'debug', 'Cron pull for Smappee700');
         $SmappeeCmd->setEventOnly(1);
-        log::add('Smappee', 'debug', 'Cron pull for Smappee800');
         $SmappeeCmd->setConfiguration('onlyChangeEvent', 1);
-        log::add('Smappee', 'debug', 'Cron pull for Smappee900');
         $SmappeeCmd->setIsHistorized(1);
-        log::add('Smappee', 'debug', 'Cron pull for Smappee1000');
         $SmappeeCmd->setSubType('numeric');
-        log::add('Smappee', 'debug', 'Cron pull for Smappee1100');
         $SmappeeCmd->save();
-
-        log::add('Smappee','debug','Fin execution du preUpdate()');
-        return $SmappeeCmd;
     }
 
     public function postUpdate() {
@@ -143,10 +111,11 @@ class SmappeeCmd extends cmd {
         $this->setLogicalId($this->getConfiguration('instance') . '.' . $this->getConfiguration('class') . '.' . $this->getConfiguration('index'));
     }
 
-    public function execute($_options =null) {
+    public function execute($_options = null) {
         if ($this->getType() == '') {
             return '';
         }
+
         $eqLogic = $this->getEqlogic();
         $eqLogic->cron($eqLogic->getId());
     }
