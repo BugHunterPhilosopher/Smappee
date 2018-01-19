@@ -19,114 +19,135 @@
 /* * ***************************Includes********************************* */
 require_once dirname(__FILE__) . '/../../../../core/php/core.inc.php';
 
-class smappee extends eqLogic {
-    /*     * *************************Attributs****************************** */
+class Smappee extends eqLogic {
 
+    private static $Smappee;
 
+    public static function cron($_eqlogic_id = null)
+    {
+        log::add('Smappee', 'debug', 'Cron pull for Smappee1');
 
-    /*     * ***********************Methode static*************************** */
+        if ($_eqlogic_id !== null) {
+            log::add('Smappee', 'debug', 'Cron pull for Smappee2');
+            $eqLogics = array(eqLogic::byId($_eqlogic_id));
+            log::add('Smappee', 'debug', 'Cron pull for Smappee3');
+        } else {
+            log::add('Smappee', 'debug', 'Cron pull for Smappee4');
+            $eqLogics = eqLogic::byType('Smappee');
+            log::add('Smappee', 'debug', 'Cron pull for Smappee5');
+            if ($eqLogics == null) {
+                log::add('Smappee', 'debug', 'Cron pull for Smappee9');
+                self::createEquipment();
+                log::add('Smappee', 'debug', 'Cron pull for Smappee10');
+                $eqLogics = eqLogic::byType('Smappee');
+                log::add('Smappee', 'debug', 'Cron pull for Smappee11');
+            }
+        }
 
-    /*
-     * Fonction exécutée automatiquement toutes les minutes par Jeedom
-      public static function cron() {
+        log::add('Smappee', 'debug', 'Cron pull for SmappeeA');
+        foreach ($eqLogics as $MySmappee) {
+            log::add('Smappee', 'debug', 'Cron pull for SmappeeB');
+            if ($MySmappee->getIsEnable() == 1) {
+                log::add('Smappee', 'debug', 'Cron pull for SmappeeC');
+                $global_electricity_consumption = rand(5, 15);
+                log::add('Smappee', 'debug', 'Cron pull for SmappeeD');
+                foreach ($MySmappee->getCmd('info') as $cmd) {
+                    log::add('Smappee', 'debug', 'Cron pull for SmappeeE');
+                    switch ($cmd->getName()) {
+                        case 'Consommation électrique globale':
+                            log::add('Smappee', 'debug', 'Cron pull for SmappeeF');
+                            $value = $global_electricity_consumption;
+                            log::add('Smappee', 'debug', 'Cron pull for SmappeeG');
+                            break;
+                    }
 
-      }
-     */
+                    log::add('Smappee', 'debug', 'Cron pull for SmappeeH');
+                    $cmd->event($value);
+                    log::add('Smappee', 'debug', 'Cron pull for SmappeeI');
+                    log::add('Smappee','debug',"set '".$cmd->getName()."' to ". $value . "W");
+                    log::add('Smappee', 'debug', 'Cron pull for SmappeeJ');
+                }
 
-
-    /*
-     * Fonction exécutée automatiquement toutes les heures par Jeedom
-      public static function cronHourly() {
-
-      }
-     */
-
-    /*
-     * Fonction exécutée automatiquement tous les jours par Jeedom
-      public static function cronDaily() {
-
-      }
-     */
-
-
-
-    /*     * *********************Méthodes d'instance************************* */
-
-    public function preInsert() {
-        
+                log::add('Smappee', 'debug', 'Cron pull for SmappeeK');
+                $MySmappee->refreshWidget();
+                log::add('Smappee', 'debug', 'Cron pull for SmappeeL');
+            }
+        }
     }
 
-    public function postInsert() {
-        
+    private static function createEquipment()
+    {
+        self::$Smappee = new eqLogic();
+        log::add('Smappee', 'debug', 'Cron pull for Smappee10');
+        self::$Smappee->setEqType_name('Smappee');
+        self::$Smappee->setIsEnable(1);
+        self::$Smappee->setIsVisible(1);
+        self::$Smappee->setStatus('OK');
+        self::$Smappee->setName('Consommation électrique globale');
+        log::add('Smappee', 'debug', 'Cron pull for Smappee11');
+        self::$Smappee->setLogicalId(uniqid());
+        log::add('Smappee', 'debug', 'Cron pull for Smappee12');
+        self::$Smappee->save();
+        log::add('Smappee', 'debug', 'Cron pull for Smappee13');
+        Smappee::createCommand(self::$Smappee->getId());
+        log::add('Smappee', 'debug', 'Cron pull for Smappee14');
     }
 
-    public function preSave() {
-        
-    }
+    public static function createCommand($id) {
+        log::add('Smappee','debug','Execution du preUpdate()');
 
-    public function postSave() {
-        
-    }
+        //Rajout des commandes
+        $SmappeeCmd = new SmappeeCmd();
+        log::add('Smappee', 'debug', 'Cron pull for Smappee300');
+        $SmappeeCmd->setName('Consommation électrique globale');
+        log::add('Smappee', 'debug', 'Cron pull for Smappee400');
+        $SmappeeCmd->setLogicalId('Consommation électrique globale');
+        log::add('Smappee', 'debug', 'Cron pull for Smappee500');
+        $SmappeeCmd->setEqLogic_id($id);
+        //$SmappeeCmd->preSave();
+        log::add('Smappee', 'debug', 'Cron pull for Smappee600');
+        $SmappeeCmd->setUnite('W');
+        $SmappeeCmd->setType('info');
+        log::add('Smappee', 'debug', 'Cron pull for Smappee700');
+        $SmappeeCmd->setEventOnly(1);
+        log::add('Smappee', 'debug', 'Cron pull for Smappee800');
+        $SmappeeCmd->setConfiguration('onlyChangeEvent', 1);
+        log::add('Smappee', 'debug', 'Cron pull for Smappee900');
+        $SmappeeCmd->setIsHistorized(1);
+        log::add('Smappee', 'debug', 'Cron pull for Smappee1000');
+        $SmappeeCmd->setSubType('numeric');
+        log::add('Smappee', 'debug', 'Cron pull for Smappee1100');
+        $SmappeeCmd->save();
 
-    public function preUpdate() {
-        
+        log::add('Smappee','debug','Fin execution du preUpdate()');
+        return $SmappeeCmd;
     }
 
     public function postUpdate() {
-        
+        $this->cron();
     }
-
-    public function preRemove() {
-        
-    }
-
-    public function postRemove() {
-        
-    }
-
-    /*
-     * Non obligatoire mais permet de modifier l'affichage du widget si vous en avez besoin
-      public function toHtml($_version = 'dashboard') {
-
-      }
-     */
-
-    /*
-     * Non obligatoire mais ca permet de déclencher une action après modification de variable de configuration
-    public static function postConfig_<Variable>() {
-    }
-     */
-
-    /*
-     * Non obligatoire mais ca permet de déclencher une action avant modification de variable de configuration
-    public static function preConfig_<Variable>() {
-    }
-     */
-
-    /*     * **********************Getteur Setteur*************************** */
 }
 
-class smappeeCmd extends cmd {
-    /*     * *************************Attributs****************************** */
+class SmappeeCmd extends cmd {
 
-
-    /*     * ***********************Methode static*************************** */
-
-
-    /*     * *********************Methode d'instance************************* */
-
-    /*
-     * Non obligatoire permet de demander de ne pas supprimer les commandes même si elles ne sont pas dans la nouvelle configuration de l'équipement envoyé en JS
-      public function dontRemoveCmd() {
-      return true;
-      }
-     */
-
-    public function execute($_options = array()) {
-        
+    public function preSave() {
+        if ($this->getConfiguration('instance') === '') {
+            $this->setConfiguration('instance', '1');
+        }
+        if ($this->getConfiguration('index') === '') {
+            $this->setConfiguration('index', '0');
+        }
+        if (strpos($this->getConfiguration('class'), '0x') !== false) {
+            $this->setConfiguration('class', hexdec($this->getConfiguration('class')));
+        }
+        $this->setLogicalId($this->getConfiguration('instance') . '.' . $this->getConfiguration('class') . '.' . $this->getConfiguration('index'));
     }
 
-    /*     * **********************Getteur Setteur*************************** */
+    public function execute($_options =null) {
+        if ($this->getType() == '') {
+            return '';
+        }
+        $eqLogic = $this->getEqlogic();
+        $eqLogic->cron($eqLogic->getId());
+    }
 }
-
-

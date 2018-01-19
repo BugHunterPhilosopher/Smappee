@@ -2,9 +2,9 @@
 if (!isConnect('admin')) {
 	throw new Exception('{{401 - Accès non autorisé}}');
 }
-$plugin = plugin::byId('Smappee');
-sendVarToJS('eqType', $plugin->getId());
-$eqLogics = eqLogic::byType($plugin->getId());
+
+sendVarToJS('eqType', 'Smappee');
+$eqLogics = eqLogic::byType('Smappee');
 
 require_once dirname(__FILE__) . '/../../../../core/php/core.inc.php';
 ?>
@@ -33,12 +33,16 @@ foreach ($eqLogics as $eqLogic) {
         <i class="fa fa-plus-circle" style="font-size : 6em;color:#94ca02;"></i>
         <br>
         <span style="font-size : 1.1em;position:relative; top : 23px;word-break: break-all;white-space: pre-wrap;word-wrap: break-word;color:#94ca02">{{Ajouter}}</span>
-    </div>
+      </div>
       <div class="cursor eqLogicAction" data-action="gotoPluginConf" style="text-align: center; background-color : #ffffff; height : 120px;margin-bottom : 10px;padding : 5px;border-radius: 2px;width : 160px;margin-left : 10px;">
-      <i class="fa fa-wrench" style="font-size : 6em;color:#767676;"></i>
-    <br>
-    <span style="font-size : 1.1em;position:relative; top : 15px;word-break: break-all;white-space: pre-wrap;word-wrap: break-word;color:#767676">{{Configuration}}</span>
-  </div>
+        <i class="fa fa-wrench" style="font-size : 6em;color:#767676;"></i>
+        <br>
+        <span style="font-size : 1.1em;position:relative; top : 15px;word-break: break-all;white-space: pre-wrap;word-wrap: break-word;color:#767676">{{Configuration}}</span>
+        <br>
+        <span style="font-size : 1.1em;position:relative; top : 15px;word-break: break-all;white-space: pre-wrap;word-wrap: break-word;color:#767676">
+            <a class="btn btn-info" id="bt_globalConsumption" title='{{Consommation Globale}}'>{{Consommation Globale}}</a>
+        </span>
+      </div>
   </div>
   <legend><i class="fa fa-table"></i> {{Mes Appareils}}</legend>
 <div class="eqLogicThumbnailContainer">

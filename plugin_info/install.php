@@ -18,17 +18,18 @@
 
 require_once dirname(__FILE__) . '/../../../core/php/core.inc.php';
 
-function template_install() {
+function Smeppee_install() {
     
 }
 
-function template_update() {
+function Smappee_update() {
     
 }
 
 
-function template_remove() {
-    
+function Smappee_remove() {
+    $cron = cron::byClassAndFunction('Smappee', 'pull');
+    if (is_object($cron)) {
+        $cron->remove();
+    }
 }
-
-?>
