@@ -3,8 +3,9 @@ if (!isConnect('admin')) {
 	throw new Exception('{{401 - Accès non autorisé}}');
 }
 
-sendVarToJS('eqType', 'Smappee');
-$eqLogics = eqLogic::byType('Smappee');
+$plugin = plugin::byId('Smappee');
+sendVarToJS('eqType', $plugin->getId());
+$eqLogics = eqLogic::byType($plugin->getId());
 
 require_once dirname(__FILE__) . '/../../../../core/php/core.inc.php';
 ?>
@@ -97,7 +98,7 @@ foreach ($eqLogics as $eqLogic) {
 	                            echo '<option value="' . $object->getId() . '">' . $object->getName() . '</option>';
                             }
 
-                            $command = escapeshellcmd('../resources/demond/jeedom/Smappee.py');
+                            $command = escapeshellcmd('../resources/demond/jeedom/Smappee_gather_appliances.py');
                             $output = shell_exec($command);
                             echo $output;
                         ?>
