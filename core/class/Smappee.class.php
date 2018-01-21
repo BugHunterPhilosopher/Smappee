@@ -50,10 +50,21 @@ class Smappee extends eqLogic {
                     . config::byKey('username', 'Smappee') . " "
                     . config::byKey('password', 'Smappee'), $global_electricity_consumption);
 
+                exec("python3 "
+                    . config::byKey('server_path', 'Smappee')
+                    . "/plugins/Smappee/resources/demond/jeedom/Smappee_global_always_on.py "
+                    . config::byKey('client_id', 'Smappee') . " "
+                    . config::byKey('client_secret', 'Smappee') . " "
+                    . config::byKey('username', 'Smappee') . " "
+                    . config::byKey('password', 'Smappee'), $global_always_on);
+
                 foreach ($MySmappee->getCmd('info') as $cmd) {
                     switch ($cmd->getName()) {
                         case 'Consommation électrique globale':
                             $value = $global_electricity_consumption[0];
+                            break;
+                        case 'Always on global':
+                            $value = $global_always_on[0];
                             break;
                     }
 
@@ -80,22 +91,35 @@ class Smappee extends eqLogic {
         self::$Smappee->setLogicalId(uniqid());
         self::$Smappee->save();
 
-        Smappee::createCommand(self::$Smappee->getId());
+        Smappee::createCommands(self::$Smappee->getId());
     }
 
-    public static function createCommand($id) {
-        $SmappeeCmd = new SmappeeCmd();
+    public static function createCommands($id) {
+        $SmappeeCmd1 = new SmappeeCmd();
 
-        $SmappeeCmd->setName('Consommation électrique globale');
-        $SmappeeCmd->setLogicalId('Smappee');
-        $SmappeeCmd->setEqLogic_id($id);
-        $SmappeeCmd->setUnite('W');
-        $SmappeeCmd->setType('info');
-        $SmappeeCmd->setEventOnly(1);
-        $SmappeeCmd->setConfiguration('onlyChangeEvent', 1);
-        $SmappeeCmd->setIsHistorized(1);
-        $SmappeeCmd->setSubType('numeric');
-        $SmappeeCmd->save();
+        $SmappeeCmd1->setName('Consommation électrique globale');
+        $SmappeeCmd1->setLogicalId('Smappee');
+        $SmappeeCmd1->setEqLogic_id($id);
+        $SmappeeCmd1->setUnite('W');
+        $SmappeeCmd1->setType('info');
+        $SmappeeCmd1->setEventOnly(1);
+        $SmappeeCmd1->setConfiguration('onlyChangeEvent', 1);
+        $SmappeeCmd1->setIsHistorized(1);
+        $SmappeeCmd1->setSubType('numeric');
+        $SmappeeCmd1->save();
+
+        $SmappeeCmd2 = new SmappeeCmd();
+
+        $SmappeeCmd2->setName('Always on global');
+        $SmappeeCmd2->setLogicalId('Smappee');
+        $SmappeeCmd2->setEqLogic_id($id);
+        $SmappeeCmd2->setUnite('W');
+        $SmappeeCmd2->setType('info');
+        $SmappeeCmd2->setEventOnly(1);
+        $SmappeeCmd2->setConfiguration('onlyChangeEvent', 1);
+        $SmappeeCmd2->setIsHistorized(1);
+        $SmappeeCmd2->setSubType('numeric');
+        $SmappeeCmd2->save();
     }
 
     public function postUpdate() {
