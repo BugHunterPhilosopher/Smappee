@@ -41,7 +41,6 @@ class Smappee extends eqLogic {
         foreach ($eqLogics as $MySmappee) {
 
             if ($MySmappee->getIsEnable() == 1) {
-
                 exec("python3 "
                     . dirname(__FILE__)
                     . "/../../../../plugins/Smappee/resources/demond/jeedom/Smappee_global_consumption.py "
@@ -130,16 +129,6 @@ class Smappee extends eqLogic {
 class SmappeeCmd extends cmd {
 
     public function preSave() {
-        if ($this->getConfiguration('instance') === '') {
-            $this->setConfiguration('instance', '1');
-        }
-        if ($this->getConfiguration('index') === '') {
-            $this->setConfiguration('index', '0');
-        }
-        if (strpos($this->getConfiguration('class'), '0x') !== false) {
-            $this->setConfiguration('class', hexdec($this->getConfiguration('class')));
-        }
-        $this->setLogicalId($this->getConfiguration('instance') . '.' . $this->getConfiguration('class') . '.' . $this->getConfiguration('index'));
     }
 
     public function execute($_options = null) {

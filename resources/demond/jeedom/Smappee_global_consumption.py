@@ -1,12 +1,8 @@
 #!/usr/bin/env python3
 
-import datetime
-import io
 import pandas
-import pytz
 import smappy
 import sys
-import time
 
 def main():
     # Authenticate to Smappee
