@@ -43,16 +43,16 @@ class Smappee extends eqLogic {
             if ($MySmappee->getIsEnable() == 1) {
 
                 exec("python3 "
-                    . config::byKey('server_path', 'Smappee')
-                    . "/plugins/Smappee/resources/demond/jeedom/Smappee_global_consumption.py "
+                    . dirname(__FILE__)
+                    . "/../../../../plugins/Smappee/resources/demond/jeedom/Smappee_global_consumption.py "
                     . config::byKey('client_id', 'Smappee') . " "
                     . config::byKey('client_secret', 'Smappee') . " "
                     . config::byKey('username', 'Smappee') . " "
                     . config::byKey('password', 'Smappee'), $global_electricity_consumption);
 
                 exec("python3 "
-                    . config::byKey('server_path', 'Smappee')
-                    . "/plugins/Smappee/resources/demond/jeedom/Smappee_global_always_on.py "
+                    . dirname(__FILE__)
+                    . "/../../../../plugins/Smappee/resources/demond/jeedom/Smappee_global_always_on.py "
                     . config::byKey('client_id', 'Smappee') . " "
                     . config::byKey('client_secret', 'Smappee') . " "
                     . config::byKey('username', 'Smappee') . " "

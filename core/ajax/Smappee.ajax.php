@@ -30,13 +30,11 @@ try {
         $type = init('type');
 
         if ($type == 'remote') {
-            $server_path = init('server_path');
             $client_id = init('client_id');
             $client_secret = init('client_secret');
             $username = init('username');
             $password = init('password');
 
-            config::save('server_path', $server_path, 'Smappee');
             config::save('client_id', $client_id, 'Smappee');
             config::save('client_secret', $client_secret, 'Smappee');
             config::save('username' , $username, 'Smappee');

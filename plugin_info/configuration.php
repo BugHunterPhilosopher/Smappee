@@ -25,12 +25,6 @@ if (!isConnect()) {
 <form class="form-horizontal">
     <fieldset>
         <div class="form-group">
-            <label class="col-lg-4 control-label">{{Server Path}}</label>
-            <div class="col-lg-2">
-                <input class="configKey form-control server_path" data-l1key="server_path" />
-            </div>
-        </div>
-        <div class="form-group">
             <label class="col-lg-4 control-label">{{Client ID}}</label>
             <div class="col-lg-2">
                 <input class="configKey form-control client_id" data-l1key="client_id" />
@@ -59,7 +53,6 @@ if (!isConnect()) {
 
 <script>
     function Smappee_postSaveConfiguration(){
-        var server_path = $('.server_path').val();
         var client_id = $('.client_id').val();
         var client_secret = $('.client_secret').val();
         var username = $('.username').val();
@@ -71,7 +64,6 @@ if (!isConnect()) {
             data: {
                 action: "postSave",
                 type: "remote",
-                server_path: server_path,
                 client_id: client_id,
                 client_secret: client_secret,
                 username: username,
