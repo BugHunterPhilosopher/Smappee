@@ -6,7 +6,6 @@ import pytz
 import smappy
 import sys
 import tempfile
-import yaml
 
 def main():
     dirpath = tempfile.gettempdir()

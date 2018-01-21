@@ -30,17 +30,19 @@ try {
         $type = init('type');
 
         if ($type == 'remote') {
+            $server_path = init('server_path');
             $client_id = init('client_id');
             $client_secret = init('client_secret');
             $username = init('username');
             $password = init('password');
 
+            config::save('server_path', $server_path, 'Smappee');
             config::save('client_id', $client_id, 'Smappee');
             config::save('client_secret', $client_secret, 'Smappee');
             config::save('username' , $username, 'Smappee');
             config::save('password', $password, 'Smappee');
 
-            passthru("python ../../resources/demond/jeedom/Smappee.py "
+            passthru("python ../../resources/demond/jeedom/Smappee_gather_appliances.py "
                 . config::byKey('client_id', 'Smappee') . " "
                 . config::byKey('client_secret', 'Smappee') . " "
                 . config::byKey('username', 'Smappee') . " "

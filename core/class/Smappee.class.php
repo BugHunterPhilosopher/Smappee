@@ -23,7 +23,7 @@ class Smappee extends eqLogic {
 
     private static $Smappee;
 
-    public static function cron($_eqlogic_id = null)
+    public static function cron5($_eqlogic_id = null)
     {
         log::add('Smappee', 'debug', 'Cron for Smappee');
 
@@ -41,12 +41,19 @@ class Smappee extends eqLogic {
         foreach ($eqLogics as $MySmappee) {
 
             if ($MySmappee->getIsEnable() == 1) {
-                $global_electricity_consumption = rand(5, 15);
+
+                exec("python3 "
+                    . config::byKey('server_path', 'Smappee')
+                    . "/plugins/Smappee/resources/demond/jeedom/Smappee_global_consumption.py "
+                    . config::byKey('client_id', 'Smappee') . " "
+                    . config::byKey('client_secret', 'Smappee') . " "
+                    . config::byKey('username', 'Smappee') . " "
+                    . config::byKey('password', 'Smappee'), $global_electricity_consumption);
 
                 foreach ($MySmappee->getCmd('info') as $cmd) {
                     switch ($cmd->getName()) {
                         case 'Consommation électrique globale':
-                            $value = $global_electricity_consumption;
+                            $value = $global_electricity_consumption[0];
                             break;
                     }
 
@@ -69,7 +76,7 @@ class Smappee extends eqLogic {
         self::$Smappee->setIsEnable(1);
         self::$Smappee->setIsVisible(1);
         self::$Smappee->setStatus('OK');
-        self::$Smappee->setName('Consommation électrique globale');
+        self::$Smappee->setName('Smappee');
         self::$Smappee->setLogicalId(uniqid());
         self::$Smappee->save();
 
@@ -80,7 +87,7 @@ class Smappee extends eqLogic {
         $SmappeeCmd = new SmappeeCmd();
 
         $SmappeeCmd->setName('Consommation électrique globale');
-        $SmappeeCmd->setLogicalId('Consommation électrique globale');
+        $SmappeeCmd->setLogicalId('Smappee');
         $SmappeeCmd->setEqLogic_id($id);
         $SmappeeCmd->setUnite('W');
         $SmappeeCmd->setType('info');
@@ -92,7 +99,7 @@ class Smappee extends eqLogic {
     }
 
     public function postUpdate() {
-        $this->cron();
+        $this->cron5();
     }
 }
 
@@ -117,6 +124,6 @@ class SmappeeCmd extends cmd {
         }
 
         $eqLogic = $this->getEqlogic();
-        $eqLogic->cron($eqLogic->getId());
+        $eqLogic->cron5($eqLogic->getId());
     }
 }
