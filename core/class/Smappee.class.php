@@ -70,7 +70,7 @@ class Smappee extends eqLogic {
         log::add('Smappee', 'debug', 'done Cron for Smappee');
     }
 
-    private static function createEquipment()
+    public static function createEquipment()
     {
         self::$Smappee = new eqLogic();
 
@@ -80,12 +80,13 @@ class Smappee extends eqLogic {
         self::$Smappee->setStatus('OK');
         self::$Smappee->setName('Smappee');
         self::$Smappee->setLogicalId(uniqid());
+        self::$Smappee->setEqType_name('Smappee');
         self::$Smappee->save();
 
         Smappee::createCommands(self::$Smappee->getId());
     }
 
-    public static function createCommands($id) {
+    private static function createCommands($id) {
         $SmappeeCmd1 = new SmappeeCmd();
 
         $SmappeeCmd1->setName('Consommation électrique globale');
@@ -97,6 +98,7 @@ class Smappee extends eqLogic {
         $SmappeeCmd1->setConfiguration('onlyChangeEvent', 1);
         $SmappeeCmd1->setIsHistorized(1);
         $SmappeeCmd1->setSubType('numeric');
+        $SmappeeCmd1->setEqType('Smappee');
         $SmappeeCmd1->save();
 
         $SmappeeCmd2 = new SmappeeCmd();
@@ -110,6 +112,7 @@ class Smappee extends eqLogic {
         $SmappeeCmd2->setConfiguration('onlyChangeEvent', 1);
         $SmappeeCmd2->setIsHistorized(1);
         $SmappeeCmd2->setSubType('numeric');
+        $SmappeeCmd2->setEqType('Smappee');
         $SmappeeCmd2->save();
     }
 

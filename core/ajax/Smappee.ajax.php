@@ -18,6 +18,7 @@
 
 try {
     require_once dirname(__FILE__) . '/../../../../core/php/core.inc.php';
+    require_once dirname(__FILE__) . '/../class/Smappee.class.php';
     include_file('core', 'authentification', 'php');
 
     if (!isConnect('admin')) {
@@ -45,6 +46,8 @@ try {
                 . config::byKey('client_secret', 'Smappee') . " "
                 . config::byKey('username', 'Smappee') . " "
                 . config::byKey('password', 'Smappee'));
+
+            Smappee::createEquipment();
         }
         ajax::success();
     }
