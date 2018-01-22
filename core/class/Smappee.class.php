@@ -51,11 +51,11 @@ class Smappee extends eqLogic {
 
                 foreach ($MySmappee->getCmd('info') as $cmd) {
                     switch ($cmd->getName()) {
-                        case 'Consommation électrique globale':
-                            $value = $global_values[1];
-                            break;
                         case 'Always on global':
                             $value = $global_values[0];
+                            break;
+                        case 'Consommation électrique globale':
+                            $value = $global_values[1];
                             break;
                     }
 
