@@ -43,27 +43,19 @@ class Smappee extends eqLogic {
             if ($MySmappee->getIsEnable() == 1) {
                 exec("python3 "
                     . dirname(__FILE__)
-                    . "/../../../../plugins/Smappee/resources/demond/jeedom/Smappee_global_consumption.py "
+                    . "/../../../../plugins/Smappee/resources/demond/jeedom/Smappee_global.py "
                     . config::byKey('client_id', 'Smappee') . " "
                     . config::byKey('client_secret', 'Smappee') . " "
                     . config::byKey('username', 'Smappee') . " "
-                    . config::byKey('password', 'Smappee'), $global_electricity_consumption);
-
-                exec("python3 "
-                    . dirname(__FILE__)
-                    . "/../../../../plugins/Smappee/resources/demond/jeedom/Smappee_global_always_on.py "
-                    . config::byKey('client_id', 'Smappee') . " "
-                    . config::byKey('client_secret', 'Smappee') . " "
-                    . config::byKey('username', 'Smappee') . " "
-                    . config::byKey('password', 'Smappee'), $global_always_on);
+                    . config::byKey('password', 'Smappee'), $global_values);
 
                 foreach ($MySmappee->getCmd('info') as $cmd) {
                     switch ($cmd->getName()) {
                         case 'Consommation électrique globale':
-                            $value = $global_electricity_consumption[0];
+                            $value = $global_values[1];
                             break;
                         case 'Always on global':
-                            $value = $global_always_on[0];
+                            $value = $global_values[0];
                             break;
                     }
 
