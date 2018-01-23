@@ -61,7 +61,7 @@ require_once dirname(__FILE__) . '/../../../../core/php/core.inc.php';
                 foreach ($eqLogics as $eqLogic) {
                     $appliance_name = (empty($appliance['name'])) ? $appliance['id'] : $appliance['name'];
 
-                    echo '<span class="eqLogicDisplayCard cursor smappeeAppliance" data-logical-id="' . $eqLogic->getLogicalId() . '" data-eqLogic_id="' . $appliance['id'] . '">';
+                    echo '<span class="eqLogicDisplayCard cursor smappeeAppliance" data-name="' . $appliance_name . '" data-logical-id="' . $eqLogic->getLogicalId() . '" data-eqLogic_id="' . $appliance['id'] . '">';
                     echo '<img class="smappeeApplianceImage" src="' . $plugin->getPathImgIcon() . '" height="140" width="130" />';
                     echo '<span style="font-size : 1.1em;position:relative; top : 15px;">' . $appliance_name . '</span>';
                     echo '</span>';

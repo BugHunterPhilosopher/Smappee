@@ -21,8 +21,12 @@ $('#bt_globalConsumption').off().on('click', function () {
     $('#md_modal').load('index.php?v=d&plugin=Smappee&modal=global.consumption').dialog('open');
 });
 
+var cleanString = function (dirtyString) {
+    return dirtyString.replace(/[|&;$%@?"<>()+,]/g, "");
+}
 
 $('.eqLogicDisplayCard').off().on('click', function() {
-    $('#md_modal').dialog({title: "{{Mon Appareil}}"});
-    $('#md_modal').load('index.php?v=d&plugin=Smappee&modal=appliance&id=' + $(this).attr('data-logical-id')).dialog('open');
+    $('#md_modal').dialog({title: "{{Mon Appareil : }}" + cleanString($(this).attr('data-name'))});
+    $('#md_modal').load('index.php?v=d&plugin=Smappee&modal=appliance&id=' + $(this).attr('data-logical-id') +
+        '&name=' + cleanString($(this).attr('data-name'))).dialog('open');
 });
