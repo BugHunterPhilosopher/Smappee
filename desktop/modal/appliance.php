@@ -38,7 +38,10 @@ if (!isConnect('admin')) {
                     <div class="form-group">
                         <label class="col-sm-3 control-label">{{Nom de l'équipement Smappee}}</label>
                         <div class="col-sm-3">
-                            <input type="text" class="eqLogicAttr form-control" data-l1key="name" placeholder="{{Nom de l'équipement Smappee}}"/>
+                            <?php
+                                echo '<input type="text" class="eqLogicAttr form-control" data-l1key="name" placeholder="' .
+                                    $_GET['name'] . '"/>';
+                            ?>
                         </div>
                     </div>
                     <div class="form-group">

@@ -43,7 +43,7 @@ require_once dirname(__FILE__) . '/../../../../core/php/core.inc.php';
                 <span style="font-size : 1.1em;position:relative; top : 15px;word-break: break-all;white-space: pre-wrap;word-wrap: break-word;color:#767676">{{Configuration}}</span>
                 <br>
                 <span style="font-size : 1.1em;position:relative; top : 15px;word-break: break-all;white-space: pre-wrap;word-wrap: break-word;color:#767676">
-            <a class="btn btn-info" id="bt_globalConsumption" title='{{Consommation Globale}}'>{{Consommation Globale}}</a>
+            <!--<a class="btn btn-info" id="bt_globalConsumption" title='{{Consommation Globale}}'>{{Consommation Globale}}</a>-->
         </span>
             </div>
         </div>
@@ -61,7 +61,10 @@ require_once dirname(__FILE__) . '/../../../../core/php/core.inc.php';
                 foreach ($eqLogics as $eqLogic) {
                     $appliance_name = (empty($appliance['name'])) ? $appliance['id'] : $appliance['name'];
 
-                    echo '<span class="eqLogicDisplayCard cursor smappeeAppliance" data-name="' . $appliance_name . '" data-logical-id="' . $eqLogic->getLogicalId() . '" data-eqLogic_id="' . $appliance['id'] . '">';
+                    echo '<span class="eqLogicDisplayCard cursor smappeeAppliance" data-name="' .
+                        $appliance_name . '" data-logical-id="' .
+                        $eqLogic->getLogicalId() . '" data-appliance-id="' .
+                        $appliance['id'] . '">';
                     echo '<img class="smappeeApplianceImage" src="' . $plugin->getPathImgIcon() . '" height="140" width="130" />';
                     echo '<span style="font-size : 1.1em;position:relative; top : 15px;">' . $appliance_name . '</span>';
                     echo '</span>';

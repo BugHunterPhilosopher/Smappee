@@ -24,5 +24,5 @@ $('#bt_globalConsumption').off().on('click', function () {
 $('.eqLogicDisplayCard').off().on('click', function() {
     $('#md_modal').dialog({title: "{{Mon Appareil : }}" + $(this).attr('data-name')});
     $('#md_modal').load('index.php?v=d&plugin=Smappee&modal=appliance&id=' + $(this).attr('data-logical-id') +
-        '&name=' + encodeURI($(this).attr('data-name'))).dialog('open');
+        '&name=' + encodeURI($(this).attr('data-name')) + '&applianceId=' + $(this).attr('data-appliance-id')).dialog('open');
 });
