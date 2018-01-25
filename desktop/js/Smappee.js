@@ -55,6 +55,7 @@ $('a[data-action="save"].btn-success').off().on('click', function() {
                 $('#div_alert').showAlert({message: data.result, level: 'danger'});
                 return;
             } else {
+                $('#md_modal').dialog('close');
             }
         }
     });
