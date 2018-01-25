@@ -19,6 +19,7 @@ def main():
     id = loc['serviceLocationId']
 
     consumptions = s.get_consumption(id, start, end, 1)
+    print(consumptions)
     print(consumptions['consumptions'][0]['alwaysOn'])
     print(consumptions['consumptions'][0]['consumption'])
 

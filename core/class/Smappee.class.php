@@ -27,6 +27,7 @@ class Smappee extends eqLogic {
     {
         log::add('Smappee', 'debug', 'Cron for Smappee');
 
+        # global consumption and global always on
         if ($_eqlogic_id !== null) {
             $eqLogics = array(eqLogic::byId($_eqlogic_id));
         } else {
@@ -63,7 +64,41 @@ class Smappee extends eqLogic {
                     log::add('Smappee','debug',"set '".$cmd->getName()."' to ". $value . "W");
                 }
 
-                $MySmappee->refreshWidget();
+            }
+            $MySmappee->refreshWidget();
+        }
+
+        # appliance consumptions
+        $eqLogics = eqLogic::byType('SmappeeAppliance%');
+        $is_not_empty = !empty(array_filter($eqLogics));
+
+        if ($is_not_empty) {
+            foreach ($eqLogics as $appliance) {
+                if ($appliance->getIsEnable() == 1) {
+                    exec("python3 "
+                        . dirname(__FILE__)
+                        . "/../../../../plugins/Smappee/resources/demond/jeedom/Smappee_global.py "
+                        . config::byKey('client_id', 'Smappee') . " "
+                        . config::byKey('client_secret', 'Smappee') . " "
+                        . config::byKey('username', 'Smappee') . " "
+                        . config::byKey('password', 'Smappee'), $global_values);
+
+                    foreach ($appliance->getCmd('info') as $cmd) {
+                        switch ($cmd->getName()) {
+                            case 'Always on global':
+                                $value = $global_values[0];
+                                break;
+                            case 'Consommation électrique globale':
+                                $value = $global_values[1];
+                                break;
+                        }
+
+                        $cmd->event($value);
+                        log::add('Smappee','debug',"set '".$cmd->getName()."' to ". $value . "W");
+                    }
+
+                }
+                $appliance->refreshWidget();
             }
         }
 
@@ -80,13 +115,12 @@ class Smappee extends eqLogic {
         self::$Smappee->setStatus('OK');
         self::$Smappee->setName('Smappee');
         self::$Smappee->setLogicalId(uniqid());
-        self::$Smappee->setEqType_name('Smappee');
         self::$Smappee->save();
 
         Smappee::createCommands(self::$Smappee->getId());
     }
 
-    private static function createCommands($id) {
+    public static function createCommands($id, $consumption_name, $always_on_name) {
         $SmappeeCmd1 = new SmappeeCmd();
 
         $SmappeeCmd1->setName('Consommation électrique globale');

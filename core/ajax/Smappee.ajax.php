@@ -24,7 +24,7 @@ try {
     if (!isConnect('admin')) {
         throw new Exception(__('401 - Accès non autorisé', __FILE__));
     }
-    
+
     ajax::init();
 
     if (init('action') == 'postSave') {
@@ -51,6 +51,43 @@ try {
         }
         ajax::success();
     }
+
+    if (init('action') == 'applianceSave') {
+        $type = init('type');
+
+        if ($type == 'remote') {
+            $id = init('id');
+            $appliance_name = init('appliance_name');
+            $parent_object = init('parent_object');
+            $monitor_consumption = init('monitor_consumption');
+
+            $eqTypeName = strpos($id, 'SmappeeAppliance') === 0 ? $id : 'SmappeeAppliance' . $id;
+
+            $eqLogics = eqLogic::byType($eqTypeName);
+            $is_not_empty = !empty(array_filter($eqLogics));
+            log::add('Smappee', 'debug', 'appliance: ' . $eqTypeName . ', found?: ' . $is_not_empty);
+
+            if ($is_not_empty) {
+                array_pop($eqLogics)->remove();
+                log::add('Smappee', 'debug', 'appliance: ' . $eqTypeName . ' removed from DB');
+            }
+
+            $eqLogic =  new eqLogic();
+            $eqLogic->setName($appliance_name);
+            $eqLogic->setEqType_name($eqTypeName);
+            $eqLogic->setObject_id((int)$parent_object);
+            $eqLogic->setIsEnable(1);
+            $eqLogic->setIsVisible(1);
+            $eqLogic->setStatus($monitor_consumption);
+            $eqLogic->setLogicalId(uniqid());
+
+            $eqLogic->save();
+            log::add('Smappee', 'debug', 'appliance: ' . $eqTypeName . ' saved in DB');
+
+            Smappee::createCommands($eqLogic->getId());
+        }
+    }
+    ajax::success();
 
     throw new Exception(__('Aucune méthode correspondante à : ', __FILE__) . init('action'));
     /*     * *********Catch exeption*************** */

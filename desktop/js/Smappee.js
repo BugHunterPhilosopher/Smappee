@@ -23,6 +23,39 @@ $('#bt_globalConsumption').off().on('click', function () {
 
 $('.eqLogicDisplayCard').off().on('click', function() {
     $('#md_modal').dialog({title: "{{Mon Appareil : }}" + $(this).attr('data-name')});
-    $('#md_modal').load('index.php?v=d&plugin=Smappee&modal=appliance&id=' + $(this).attr('data-logical-id') +
-        '&name=' + encodeURI($(this).attr('data-name')) + '&applianceId=' + $(this).attr('data-appliance-id')).dialog('open');
+    $('#md_modal').load('index.php?v=d&plugin=Smappee&modal=appliance&name='
+        + encodeURI($(this).attr('data-name'))
+        + '&applianceId='
+        + $(this).attr('data-appliance-id')).dialog('open');
+});
+
+$('a[data-action="save"].btn-success').off().on('click', function() {
+    var id = $('.id').val();
+    var appliance_name = $('.applianceName').val();
+    var parent_object = $('#sel_object').val();
+    var monitor_consumption = $('.monitorConsumption').val();
+
+    $.ajax({
+        type: "POST",
+        url: "plugins/Smappee/core/ajax/Smappee.ajax.php",
+        data: {
+            action: "applianceSave",
+            type: "remote",
+            id: id,
+            appliance_name: appliance_name,
+            parent_object: parent_object,
+            monitor_consumption: monitor_consumption
+        },
+        dataType: 'json',
+        error: function (request, status, error) {
+            handleAjaxError(request, status, error);
+        },
+        success: function (data) {
+            if (data.state != 'ok') {
+                $('#div_alert').showAlert({message: data.result, level: 'danger'});
+                return;
+            } else {
+            }
+        }
+    });
 });

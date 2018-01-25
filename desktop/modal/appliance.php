@@ -19,6 +19,14 @@
 if (!isConnect('admin')) {
     throw new Exception('{{401 - Accès non autorisé}}');
 }
+
+$eqLogic = eqLogic::byType(strpos($_GET['applianceId'], 'SmappeeAppliance') === 0 ?
+            $_GET['applianceId'] :
+            'SmappeeAppliance' . $_GET['applianceId']);
+$eqLogic = current($eqLogic);
+$eqLogic = is_bool($eqLogic) ? NULL : $eqLogic;
+
+require_once dirname(__FILE__) . '/../../../../core/php/core.inc.php';
 ?>
 
 <div class="col-lg-10 col-md-9 col-sm-8 eqLogic" style="border-left: solid 1px #EEE; padding-left: 25px;">
@@ -39,8 +47,10 @@ if (!isConnect('admin')) {
                         <label class="col-sm-3 control-label">{{Nom de l'équipement Smappee}}</label>
                         <div class="col-sm-3">
                             <?php
-                                echo '<input type="text" class="eqLogicAttr form-control" data-l1key="name" placeholder="' .
-                                    $_GET['name'] . '"/>';
+                                echo '<input type="text" class="eqLogicAttr form-control applianceName" data-l1key="name" placeholder="' .
+                                    $_GET['name'] . '" value="' . (!is_null($eqLogic) ? $eqLogic->getName() : $_GET['name']) . '"/>';
+                                echo '<input type="hidden" class="eqLogicAttr form-control id" data-l1key="name" 
+                                    value="' . $_GET['applianceId'] . '"/>';
                             ?>
                         </div>
                     </div>
@@ -51,7 +61,11 @@ if (!isConnect('admin')) {
                                 <option value="">{{Aucun}}</option>
                                 <?php
                                 foreach (object::all() as $object) {
-                                    echo '<option value="' . $object->getId() . '">' . $object->getName() . '</option>';
+                                    $is_selected = (!is_null($eqLogic) &&
+                                        is_object($eqLogic->getObject()) &&
+                                        $eqLogic->getObject()->getId() == $object->getId()) ?
+                                        'selected="selected"' : '';
+                                    echo '<option value="' . $object->getId() . '" '. $is_selected . '>' . $object->getName() . '</option>';
                                 }
 
                                 $command = escapeshellcmd('../resources/demond/jeedom/Smappee_gather_appliances.py');
@@ -81,9 +95,9 @@ if (!isConnect('admin')) {
                         </div>
                     </div>
                     <div class="form-group">
-                        <label class="col-sm-3 control-label">{{Smappee param 1}}</label>
+                        <label class="col-sm-3 control-label">{{Surveiller la consommation électrique}}</label>
                         <div class="col-sm-3">
-                            <input type="text" class="eqLogicAttr form-control" data-l1key="configuration" data-l2key="city" placeholder="param1"/>
+                            <input type="checkbox" class="eqLogicAttr form-control monitorConsumption" data-l1key="monitorConsumption"/>
                         </div>
                     </div>
                 </fieldset>
