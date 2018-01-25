@@ -42,8 +42,6 @@ require_once dirname(__FILE__) . '/../../../../core/php/core.inc.php';
                 <br>
                 <span style="font-size : 1.1em;position:relative; top : 15px;word-break: break-all;white-space: pre-wrap;word-wrap: break-word;color:#767676">{{Configuration}}</span>
                 <br>
-                <span style="font-size : 1.1em;position:relative; top : 15px;word-break: break-all;white-space: pre-wrap;word-wrap: break-word;color:#767676">
-            <!--<a class="btn btn-info" id="bt_globalConsumption" title='{{Consommation Globale}}'>{{Consommation Globale}}</a>-->
         </span>
             </div>
         </div>
@@ -58,7 +56,14 @@ require_once dirname(__FILE__) . '/../../../../core/php/core.inc.php';
 
             // Display appliances
             foreach ($json_data as $appliance) {
-                $appliance_name = (empty($appliance['name'])) ? $appliance['id'] : $appliance['name'];
+                $eqLogics = eqLogic::byType('SmappeeAppliance' . $appliance['id']);
+                $is_not_empty = !empty(array_filter($eqLogics));
+
+                if ($is_not_empty) {
+                    $appliance_name = array_pop($eqLogics)->getName();
+                } else {
+                    $appliance_name = (empty($appliance['name'])) ? $appliance['id'] : $appliance['name'];
+                }
 
                 echo '<span class="eqLogicDisplayCard cursor smappeeAppliance" data-name="' . $appliance_name .
                     '" data-appliance-id="' . $appliance['id'] . '">';

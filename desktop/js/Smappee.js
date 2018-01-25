@@ -33,7 +33,7 @@ $('a[data-action="save"].btn-success').off().on('click', function() {
     var id = $('.id').val();
     var appliance_name = $('.applianceName').val();
     var parent_object = $('#sel_object').val();
-    var monitor_consumption = $('.monitorConsumption').val();
+    var monitor_consumption = $('.monitorConsumption').is(':checked') ? "true" : "false";
 
     $.ajax({
         type: "POST",
@@ -56,6 +56,7 @@ $('a[data-action="save"].btn-success').off().on('click', function() {
                 return;
             } else {
                 $('#md_modal').dialog('close');
+                location.reload();
             }
         }
     });

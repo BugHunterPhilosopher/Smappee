@@ -62,7 +62,6 @@ try {
             $monitor_consumption = init('monitor_consumption');
 
             $eqTypeName = strpos($id, 'SmappeeAppliance') === 0 ? $id : 'SmappeeAppliance' . $id;
-
             $eqLogics = eqLogic::byType($eqTypeName);
             $is_not_empty = !empty(array_filter($eqLogics));
             log::add('Smappee', 'debug', 'appliance: ' . $eqTypeName . ', found?: ' . $is_not_empty);
@@ -78,8 +77,8 @@ try {
             $eqLogic->setObject_id((int)$parent_object);
             $eqLogic->setIsEnable(1);
             $eqLogic->setIsVisible(1);
-            $eqLogic->setStatus($monitor_consumption);
             $eqLogic->setLogicalId(uniqid());
+            $eqLogic->setConfiguration('monitor_consumption', $monitor_consumption);
 
             $eqLogic->save();
             log::add('Smappee', 'debug', 'appliance: ' . $eqTypeName . ' saved in DB');
