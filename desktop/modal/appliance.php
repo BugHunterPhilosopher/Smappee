@@ -20,9 +20,7 @@ if (!isConnect('admin')) {
     throw new Exception('{{401 - Accès non autorisé}}');
 }
 
-$eqLogic = eqLogic::byType('SmappeeAppliance');
-$eqLogic = current($eqLogic);
-$eqLogic = is_bool($eqLogic) ? NULL : $eqLogic;
+$eqLogic = eqLogic::byLogicalId($_GET['name'] . '||' . $_GET['applianceId'], "SmappeeAppliance");
 
 require_once dirname(__FILE__) . '/../../../../core/php/core.inc.php';
 ?>
@@ -44,7 +42,9 @@ require_once dirname(__FILE__) . '/../../../../core/php/core.inc.php';
                         <div class="col-sm-3">
                             <?php
                                 echo '<input type="text" class="eqLogicAttr form-control applianceName" data-l1key="name" placeholder="' .
-                                    $_GET['name'] . '" value="' . ((!is_null($eqLogic) && $eqLogic->getName() != 'Smappee') ? $eqLogic->getName() : $_GET['name']) . '"/>';
+                                    $_GET['name'] . '" value="' . (!is_bool($eqLogic) ?
+                                        explode('||', $eqLogic->getLogicalId())[0]:
+                                        $_GET['name']) . '"/>';
                                 echo '<input type="hidden" class="eqLogicAttr form-control id" data-l1key="name" 
                                     value="' . $_GET['applianceId'] . '"/>';
                             echo '<input type="hidden" class="eqLogicAttr form-control oldName" data-l1key="name" 
@@ -59,7 +59,7 @@ require_once dirname(__FILE__) . '/../../../../core/php/core.inc.php';
                                 <option value="">{{Aucun}}</option>
                                 <?php
                                 foreach (object::all() as $object) {
-                                    $is_selected = (!is_null($eqLogic) &&
+                                    $is_selected = (!is_bool($eqLogic) &&
                                         is_object($eqLogic->getObject()) &&
                                         $eqLogic->getObject()->getId() == $object->getId()) ?
                                         'selected="selected"' : '';
@@ -97,7 +97,7 @@ require_once dirname(__FILE__) . '/../../../../core/php/core.inc.php';
                         <div class="col-sm-3">
                             <?php
                                 echo '<input type="checkbox" class="eqLogicAttr form-control monitorConsumption" data-l1key="monitorConsumption"' .
-                                    (!is_null($eqLogic) && $eqLogic->getConfiguration('monitor_consumption') === 'true' ? ' checked' : '') .
+                                    (!is_bool($eqLogic) && $eqLogic->getConfiguration('monitor_consumption') === 'true' ? ' checked' : '') .
                                     '/>';
                             ?>
                         </div>

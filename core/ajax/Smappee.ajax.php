@@ -64,7 +64,7 @@ try {
 
             $eqTypeName = 'Smappee';
             $eqLogics = eqLogic::byLogicalId($old_name . '||' . $id, "SmappeeAppliance");
-            $is_not_empty = !empty(array_filter($eqLogics));
+            $is_not_empty = !is_bool($eqLogics);
             log::add('Smappee', 'debug', 'appliance: ' . $eqTypeName . ', found?: ' . $is_not_empty);
 
             if ($is_not_empty) {
