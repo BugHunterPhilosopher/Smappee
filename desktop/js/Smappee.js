@@ -15,12 +15,6 @@
  * along with Jeedom. If not, see <http://www.gnu.org/licenses/>.
  */
 
-$('#bt_globalConsumption').show();
-$('#bt_globalConsumption').off().on('click', function () {
-    $('#md_modal').dialog({title: "{{Consommation Globale}}"});
-    $('#md_modal').load('index.php?v=d&plugin=Smappee&modal=global.consumption').dialog('open');
-});
-
 $('.eqLogicDisplayCard').off().on('click', function() {
     $('#md_modal').dialog({title: "{{Mon Appareil : }}" + $(this).attr('data-name')});
     $('#md_modal').load('index.php?v=d&plugin=Smappee&modal=appliance&name='
