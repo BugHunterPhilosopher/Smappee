@@ -52,7 +52,7 @@ class Smappee extends eqLogic {
 
                 foreach ($MySmappee->getCmd('info') as $cmd) {
                     switch ($cmd->getName()) {
-                        case 'Always on global':
+                        case 'En veille global':
                             $value = $global_values[0];
                             break;
                         case 'Consommation électrique globale':
@@ -69,7 +69,7 @@ class Smappee extends eqLogic {
         }
 
         # appliance consumptions
-        $eqLogics = eqLogic::byType('SmappeeAppliance%');
+        $eqLogics = eqLogic::byType('SmappeeAppliance');
         $is_not_empty = !empty(array_filter($eqLogics));
 
         if ($is_not_empty) {
@@ -77,28 +77,28 @@ class Smappee extends eqLogic {
                 if ($appliance->getIsEnable() == 1) {
                     exec("python3 "
                         . dirname(__FILE__)
-                        . "/../../../../plugins/Smappee/resources/demond/jeedom/Smappee_global.py "
+                        . "/../../../../plugins/Smappee/resources/demond/jeedom/Smappee_appliance.py "
                         . config::byKey('client_id', 'Smappee') . " "
                         . config::byKey('client_secret', 'Smappee') . " "
                         . config::byKey('username', 'Smappee') . " "
-                        . config::byKey('password', 'Smappee'), $global_values);
+                        . config::byKey('password', 'Smappee') . " "
+                        . explode('||', $appliance->getLogicalId())[1], $global_values);
 
                     foreach ($appliance->getCmd('info') as $cmd) {
                         switch ($cmd->getName()) {
-                            case 'Always on global':
+                            case $appliance->getName() . ' - Consommation active':
                                 $value = $global_values[0];
                                 break;
-                            case 'Consommation électrique globale':
+                            case $appliance->getName() . ' - Consommation totale':
                                 $value = $global_values[1];
                                 break;
                         }
 
                         $cmd->event($value);
-                        log::add('Smappee','debug',"set '".$cmd->getName()."' to ". $value . "W");
+                        log::add('Smappee', 'debug', "id: " . explode('||', $appliance->getLogicalId())[1] . ", set '" . $cmd->getName() . "' to " . $value . "W");
                     }
-
+                    $appliance->refreshWidget();
                 }
-                $appliance->refreshWidget();
             }
         }
 
@@ -109,21 +109,23 @@ class Smappee extends eqLogic {
     {
         self::$Smappee = new eqLogic();
 
+        self::$Smappee->setName('Smappee');
         self::$Smappee->setEqType_name('Smappee');
         self::$Smappee->setIsEnable(1);
         self::$Smappee->setIsVisible(1);
         self::$Smappee->setStatus('OK');
-        self::$Smappee->setName('Smappee');
         self::$Smappee->setLogicalId(uniqid());
         self::$Smappee->save();
 
-        Smappee::createCommands(self::$Smappee->getId());
+        Smappee::createCommands(self::$Smappee->getId(),
+            'Consommation électrique globale',
+            'En veille global');
     }
 
-    public static function createCommands($id, $consumption_name, $always_on_name) {
+    public static function createCommands($id, $cmd1_name, $cmd2_name = null) {
         $SmappeeCmd1 = new SmappeeCmd();
 
-        $SmappeeCmd1->setName('Consommation électrique globale');
+        $SmappeeCmd1->setName($cmd1_name);
         $SmappeeCmd1->setLogicalId('Smappee');
         $SmappeeCmd1->setEqLogic_id($id);
         $SmappeeCmd1->setUnite('W');
@@ -135,19 +137,21 @@ class Smappee extends eqLogic {
         $SmappeeCmd1->setEqType('Smappee');
         $SmappeeCmd1->save();
 
-        $SmappeeCmd2 = new SmappeeCmd();
+        if (!is_null($cmd2_name)) {
+            $SmappeeCmd2 = new SmappeeCmd();
 
-        $SmappeeCmd2->setName('Always on global');
-        $SmappeeCmd2->setLogicalId('Smappee');
-        $SmappeeCmd2->setEqLogic_id($id);
-        $SmappeeCmd2->setUnite('W');
-        $SmappeeCmd2->setType('info');
-        $SmappeeCmd2->setEventOnly(1);
-        $SmappeeCmd2->setConfiguration('onlyChangeEvent', 1);
-        $SmappeeCmd2->setIsHistorized(1);
-        $SmappeeCmd2->setSubType('numeric');
-        $SmappeeCmd2->setEqType('Smappee');
-        $SmappeeCmd2->save();
+            $SmappeeCmd2->setName($cmd2_name);
+            $SmappeeCmd2->setLogicalId('Smappee');
+            $SmappeeCmd2->setEqLogic_id($id);
+            $SmappeeCmd2->setUnite('W');
+            $SmappeeCmd2->setType('info');
+            $SmappeeCmd2->setEventOnly(1);
+            $SmappeeCmd2->setConfiguration('onlyChangeEvent', 1);
+            $SmappeeCmd2->setIsHistorized(1);
+            $SmappeeCmd2->setSubType('numeric');
+            $SmappeeCmd2->setEqType('Smappee');
+            $SmappeeCmd2->save();
+        }
     }
 
     public function postUpdate() {

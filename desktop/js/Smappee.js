@@ -32,6 +32,7 @@ $('.eqLogicDisplayCard').off().on('click', function() {
 $('a[data-action="save"].btn-success').off().on('click', function() {
     var id = $('.id').val();
     var appliance_name = $('.applianceName').val();
+    var old_name = $('.oldName').val();
     var parent_object = $('#sel_object').val();
     var monitor_consumption = $('.monitorConsumption').is(':checked') ? "true" : "false";
 
@@ -43,6 +44,7 @@ $('a[data-action="save"].btn-success').off().on('click', function() {
             type: "remote",
             id: id,
             appliance_name: appliance_name,
+            old_name: old_name,
             parent_object: parent_object,
             monitor_consumption: monitor_consumption
         },

@@ -54,14 +54,20 @@ require_once dirname(__FILE__) . '/../../../../core/php/core.inc.php';
             $json_data = json_decode($json, true);
             $opacity = '' ;
 
+            $eqLogics = eqLogic::byType('SmappeeAppliance');
+
             // Display appliances
             foreach ($json_data as $appliance) {
-                $eqLogics = eqLogic::byType('SmappeeAppliance' . $appliance['id']);
-                $is_not_empty = !empty(array_filter($eqLogics));
+                $found = false;
 
-                if ($is_not_empty) {
-                    $appliance_name = array_pop($eqLogics)->getName();
-                } else {
+                foreach ($eqLogics as $appliance_in_db) {
+                    if (explode('||', $appliance_in_db->getLogicalId())[1] == $appliance['id']) {
+                        $appliance_name = explode('||', $appliance_in_db->getLogicalId())[0];
+                        $found = true;
+                    }
+                }
+
+                if (!$found) {
                     $appliance_name = (empty($appliance['name'])) ? $appliance['id'] : $appliance['name'];
                 }
 

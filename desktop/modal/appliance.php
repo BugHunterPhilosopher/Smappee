@@ -20,9 +20,7 @@ if (!isConnect('admin')) {
     throw new Exception('{{401 - Accès non autorisé}}');
 }
 
-$eqLogic = eqLogic::byType(strpos($_GET['applianceId'], 'SmappeeAppliance') === 0 ?
-            $_GET['applianceId'] :
-            'SmappeeAppliance' . $_GET['applianceId']);
+$eqLogic = eqLogic::byType('SmappeeAppliance');
 $eqLogic = current($eqLogic);
 $eqLogic = is_bool($eqLogic) ? NULL : $eqLogic;
 
@@ -46,9 +44,11 @@ require_once dirname(__FILE__) . '/../../../../core/php/core.inc.php';
                         <div class="col-sm-3">
                             <?php
                                 echo '<input type="text" class="eqLogicAttr form-control applianceName" data-l1key="name" placeholder="' .
-                                    $_GET['name'] . '" value="' . (!is_null($eqLogic) ? $eqLogic->getName() : $_GET['name']) . '"/>';
+                                    $_GET['name'] . '" value="' . ((!is_null($eqLogic) && $eqLogic->getName() != 'Smappee') ? $eqLogic->getName() : $_GET['name']) . '"/>';
                                 echo '<input type="hidden" class="eqLogicAttr form-control id" data-l1key="name" 
                                     value="' . $_GET['applianceId'] . '"/>';
+                            echo '<input type="hidden" class="eqLogicAttr form-control oldName" data-l1key="name" 
+                                    value="' . $_GET['name'] . '"/>';
                             ?>
                         </div>
                     </div>

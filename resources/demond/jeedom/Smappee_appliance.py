@@ -10,7 +10,7 @@ def main():
     s.authenticate(sys.argv[3], sys.argv[4])
 
     # calculate time frame
-    start = datetime.datetime.now() - datetime.timedelta(hours=2)
+    start = datetime.datetime.now() - datetime.timedelta(hours=1)
     end = datetime.datetime.now()
 
     # Retrieve global electric consumption
@@ -19,12 +19,14 @@ def main():
     id = loc['serviceLocationId']
 
     consumption = s.get_events(id, sys.argv[5], start, end)
-    print(len(consumption))
 
-    for p in range(0, len(consumption)):
-        print(consumption[p]['activePower'])
-        print(consumption[p]['totalPower'])
-
+    if (len(consumption) > 0):
+        for p in range(0, len(consumption)):
+            print(consumption[p]['activePower'])
+            print(consumption[p]['totalPower'])
+    else:
+        print(0)
+        print(0)
 
 if __name__ == '__main__':
     main()

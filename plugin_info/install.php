@@ -32,4 +32,9 @@ function Smappee_remove() {
     if (is_object($cron)) {
         $cron->remove();
     }
+
+    $cron = cron::byClassAndFunction('SmappeeAppliance', 'pull');
+    if (is_object($cron)) {
+        $cron->remove();
+    }
 }

@@ -58,11 +58,12 @@ try {
         if ($type == 'remote') {
             $id = init('id');
             $appliance_name = init('appliance_name');
+            $old_name = init('old_name');
             $parent_object = init('parent_object');
             $monitor_consumption = init('monitor_consumption');
 
-            $eqTypeName = strpos($id, 'SmappeeAppliance') === 0 ? $id : 'SmappeeAppliance' . $id;
-            $eqLogics = eqLogic::byType($eqTypeName);
+            $eqTypeName = 'Smappee';
+            $eqLogics = eqLogic::byLogicalId($old_name . '||' . $id, "SmappeeAppliance");
             $is_not_empty = !empty(array_filter($eqLogics));
             log::add('Smappee', 'debug', 'appliance: ' . $eqTypeName . ', found?: ' . $is_not_empty);
 
@@ -72,18 +73,20 @@ try {
             }
 
             $eqLogic =  new eqLogic();
-            $eqLogic->setName($appliance_name);
-            $eqLogic->setEqType_name($eqTypeName);
+            $eqLogic->setName("Smappee - " . $appliance_name);
+            $eqLogic->setEqType_name("SmappeeAppliance");
             $eqLogic->setObject_id((int)$parent_object);
             $eqLogic->setIsEnable(1);
             $eqLogic->setIsVisible(1);
-            $eqLogic->setLogicalId(uniqid());
+            $eqLogic->setLogicalId($appliance_name . '||' . $id);
             $eqLogic->setConfiguration('monitor_consumption', $monitor_consumption);
 
             $eqLogic->save();
             log::add('Smappee', 'debug', 'appliance: ' . $eqTypeName . ' saved in DB');
 
-            Smappee::createCommands($eqLogic->getId());
+            Smappee::createCommands($eqLogic->getId(),
+                $appliance_name . ' - Consommation active',
+                $appliance_name . ' - Consommation totale');
         }
     }
     ajax::success();
