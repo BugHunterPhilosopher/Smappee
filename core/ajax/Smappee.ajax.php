@@ -68,7 +68,7 @@ try {
             log::add('Smappee', 'debug', 'appliance: ' . $eqTypeName . ', found?: ' . $is_not_empty);
 
             if ($is_not_empty) {
-                array_pop($eqLogics)->remove();
+                $eqLogics->remove();
                 log::add('Smappee', 'debug', 'appliance: ' . $eqTypeName . ' removed from DB');
             }
 
