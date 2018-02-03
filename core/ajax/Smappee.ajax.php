@@ -41,13 +41,37 @@ try {
             config::save('username' , $username, 'Smappee');
             config::save('password', $password, 'Smappee');
 
-            passthru("python ../../resources/demond/jeedom/Smappee_gather_appliances.py "
+            $size = array();
+
+            exec("python3 ../../resources/demond/jeedom/Smappee_count_appliances.py "
                 . config::byKey('client_id', 'Smappee') . " "
                 . config::byKey('client_secret', 'Smappee') . " "
                 . config::byKey('username', 'Smappee') . " "
-                . config::byKey('password', 'Smappee'));
+                . config::byKey('password', 'Smappee'), $size);
+
+            $size = $size[0];
+            log::add('Smappee', 'debug', 'number to parse: ' . $size);
 
             Smappee::createEquipment();
+            log::add('Smappee', 'debug', 'equipment created');
+
+            for ($appliance_id = 0; $appliance_id < $size; $appliance_id++) {
+                $global_values = array();
+                exec("python3 ../../resources/demond/jeedom/Smappee_gather_appliances.py "
+                    . config::byKey('client_id', 'Smappee') . " "
+                    . config::byKey('client_secret', 'Smappee') . " "
+                    . config::byKey('username', 'Smappee') . " "
+                    . config::byKey('password', 'Smappee') . " "
+                    . $appliance_id, $global_values);
+
+                log::add('Smappee', 'debug', sizeof($global_values) . ' lines to parse');
+                log::add('Smappee', 'debug', 'line to create: ' . $appliance_id);
+                log::add('Smappee', 'debug', 'name: ' . $global_values[0] . ', id: ' . $global_values[1]);
+
+                if ($global_values[1] != '') {
+                    Smappee::createAppliance($global_values[0], $global_values[1]);
+                }
+            }
         }
         ajax::success();
     }

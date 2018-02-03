@@ -21,7 +21,7 @@ require_once dirname(__FILE__) . '/../../../../core/php/core.inc.php';
 
 class Smappee extends eqLogic {
 
-    private static $Smappee;
+    private static $appliance;
 
     public static function cron5($_eqlogic_id = null)
     {
@@ -107,19 +107,36 @@ class Smappee extends eqLogic {
 
     public static function createEquipment()
     {
-        self::$Smappee = new eqLogic();
+        self::$appliance = new eqLogic();
 
-        self::$Smappee->setName('Smappee');
-        self::$Smappee->setEqType_name('Smappee');
-        self::$Smappee->setIsEnable(1);
-        self::$Smappee->setIsVisible(1);
-        self::$Smappee->setStatus('OK');
-        self::$Smappee->setLogicalId(uniqid());
-        self::$Smappee->save();
+        self::$appliance->setName('Smappee');
+        self::$appliance->setEqType_name('Smappee');
+        self::$appliance->setIsEnable(1);
+        self::$appliance->setIsVisible(1);
+        self::$appliance->setStatus('OK');
+        self::$appliance->setLogicalId(uniqid());
+        self::$appliance->save();
 
-        Smappee::createCommands(self::$Smappee->getId(),
+        Smappee::createCommands(self::$appliance->getId(),
             'Consommation électrique globale',
             'En veille global');
+    }
+
+    public static function createAppliance($appliance_name, $id)
+    {
+        self::$appliance = new eqLogic();
+
+        self::$appliance->setName("Smappee - " . $appliance_name);
+        self::$appliance->setEqType_name('SmappeeAppliance');
+        self::$appliance->setIsEnable(1);
+        self::$appliance->setIsVisible(1);
+        self::$appliance->setLogicalId($appliance_name . '||' . $id);
+        self::$appliance->setConfiguration('monitor_consumption', TRUE);
+        self::$appliance->save();
+
+        Smappee::createCommands(self::$appliance->getId(),
+            'Consommation Active',
+            'Consommation Totale');
     }
 
     public static function createCommands($id, $cmd1_name, $cmd2_name = null) {

@@ -23,14 +23,7 @@ def main():
     with io.open(dirpath + '/Smappee.json', 'w', encoding='utf-8') as file:
         file.write(json.dumps(appliances, ensure_ascii=False))
 
-    appliance = appliances[int(sys.argv[5])]
-    if appliance['name'] == '':
-        print("id_" + str(appliance['id']))
-    else:
-        print(appliance['name'])
-    print(appliance['id'])
-
-    #for appliance in appliances:
+    print(len(appliances))
 
 
 if __name__ == '__main__':
